@@ -68,3 +68,12 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+## StudyBuddy auth pages
+
+This workspace includes a simple modern-themed login/signup portal under `src/components`.
+
+- `Login.js` — sign-in form (username, password)
+- `Signup.js` — create account (username, password, name, email, major, credits -> year estimate)
+
+To view the pages run the app with `npm start` and open http://localhost:3000. The app shows the login page by default with a link to sign up.
