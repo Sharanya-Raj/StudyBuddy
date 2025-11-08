@@ -18,6 +18,11 @@ function App(){
   // simple in-memory users store: { [username]: {password,name,major,credits,loginCount} }
   const [users,setUsers]=useState({});
 
+  // Debug function to log current users
+  const logUsers = () => {
+    console.log('Current users:', users);
+  };
+
   function handleLogin(payload){
     // payload expected: { type: 'login'|'signup', username, password, name, major, credits }
     const type = payload.type || 'login';
@@ -57,19 +62,26 @@ function App(){
     }
 
     // login flow
+    console.log('Login attempt:', { username, password: '***' });
+    console.log('Available users:', users);
+    
     const existing = users[username];
     if(!existing){
+      console.log('User not found:', username);
       return {success:false, message: 'Invalid username.'};
     }
-    if(existing.password !== (payload.password || '')){
+    if(existing.password !== payload.password){
+      console.log('Password mismatch for user:', username);
       return {success:false, message: 'Invalid password.'};
     }
+    
     const nextCount = (existing.loginCount || 0) + 1;
     const updated = {...existing, loginCount: nextCount};
     setUsers(prev => ({...prev, [username]: updated}));
     const year = computeYear(updated.credits);
     setUser({...updated, username, year, loginCount: nextCount});
     setView('dashboard');
+    console.log('Login successful:', username);
     return {success:true};
   }
 
@@ -78,15 +90,29 @@ function App(){
     setView('login');
   }
 
-  // Clean up user data
+  // Initialize with a test account and log users state
   React.useEffect(() => {
     setUsers(prev => {
-      const copy = {...prev};
-      delete copy['sharanyaraj24@gmail.com'];
-      console.log('Removed test account');
-      return copy;
+      const updated = Object.keys(prev).length === 0 ? {
+        'test': {
+          username: 'test',
+          password: 'Test123!',
+          name: 'Test User',
+          major: 'Computer Science',
+          credits: 60,
+          loginCount: 0,
+          email: 'test@njit.edu'
+        }
+      } : prev;
+      console.log('Current users after initialization:', updated);
+      return updated;
     });
   }, []);
+
+  // Log users state changes
+  React.useEffect(() => {
+    console.log('Users state updated:', users);
+  }, [users]);
 
   return (
     <div className="App">

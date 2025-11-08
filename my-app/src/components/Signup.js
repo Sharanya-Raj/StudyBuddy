@@ -46,17 +46,29 @@ export default function Signup({onSwitch, onLogin}){
     }
 
     // Send signup request
-    const payload = {type:'signup', username: form.username || form.email, password: form.password, name: form.name, major: form.major, credits: Number(form.credits) || 0};
-    console.log('Signup:', payload);
+    const payload = {
+      type: 'signup',
+      username: form.username.trim(),
+      password: form.password,
+      name: form.name.trim(),
+      email: form.email.trim(),
+      major: form.major.trim(),
+      credits: Number(form.credits) || 0
+    };
+    console.log('Signup payload:', payload);
     if(!onLogin) return;
 
     try {
       const res = onLogin(payload);
-      if(!res.success){
-        setError(res.message || 'Unable to create account.');
+      if(!res || !res.success){
+        setError(res?.message || 'Unable to create account.');
         return;
       }
+      // Clear form on success
+      setForm({username:'',password:'',confirmPassword:'',name:'',email:'',major:'',credits:''});
+      setError('');
     } catch(err) {
+      console.error('Signup error:', err);
       setError('An error occurred while creating your account.');
     }
   }

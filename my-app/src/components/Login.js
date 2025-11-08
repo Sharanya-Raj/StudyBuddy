@@ -18,16 +18,20 @@ export default function Login({onSwitch, onLogin}){
       return;
     }
     // Call parent to verify credentials and sign in
-    const payload = {type:'login', username: form.username, password: form.password};
+    const payload = {type:'login', username: form.username.trim(), password: form.password};
     if(!onLogin) return;
 
     try {
       const res = onLogin(payload);
-      if(!res.success){
-        setError(res.message || 'Unable to sign in.');
+      if(!res || !res.success){
+        setError(res?.message || 'Unable to sign in.');
         return;
       }
+      // Clear form and error on successful login
+      setForm({username:'', password:''});
+      setError('');
     } catch(err) {
+      console.error('Login error:', err);
       setError('An error occurred while signing in.');
     }
   }
