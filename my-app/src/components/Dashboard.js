@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Auth.css';
+import StudyTimer from './StudyTimer';
 
 export default function Dashboard({user, onLogout}){
+  const [showTimer, setShowTimer] = useState(false);
+  
   if(!user) return null;
 
   return (
@@ -30,8 +33,29 @@ export default function Dashboard({user, onLogout}){
             </div>
           </div>
 
+          {showTimer ? (
+            <div className="dashboard-content">
+              <StudyTimer onClose={() => setShowTimer(false)} />
+            </div>
+          ) : (
+            <div className="dashboard-grid">
+              <button className="dashboard-btn" onClick={() => setShowTimer(true)}>
+                Let's study today
+              </button>
+              <button className="dashboard-btn" disabled>
+                Coming soon
+              </button>
+              <button className="dashboard-btn" disabled>
+                Coming soon
+              </button>
+              <button className="dashboard-btn" disabled>
+                Coming soon
+              </button>
+            </div>
+          )}
+
           <div style={{marginTop:18}}>
-            <button className="btn" onClick={onLogout}>Sign out</button>
+            <button className="btn ghost" onClick={onLogout}>Sign out</button>
           </div>
         </div>
       </div>

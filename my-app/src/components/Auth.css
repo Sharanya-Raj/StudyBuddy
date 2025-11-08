@@ -59,6 +59,78 @@
 .note{font-size:0.8rem;color:var(--muted);margin-top:10px}
 .error{color:#ff8b8b;font-size:0.8rem;margin-top:6px}
 
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.dashboard-btn {
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.05));
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 20px;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 100px;
+}
+
+.dashboard-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.08));
+  transform: translateY(-2px);
+}
+
+.dashboard-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Study Timer */
+.study-timer {
+  text-align: center;
+  margin: 24px 0;
+}
+
+.time-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.time-option-btn {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  padding: 12px;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.time-option-btn:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.timer-display {
+  font-size: 3rem;
+  font-weight: 700;
+  font-family: monospace;
+  margin: 24px 0;
+  color: var(--accent);
+}
+
+.timer-controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
 @media (max-width:480px){
   .auth-card{padding:20px;border-radius:10px}
 }
