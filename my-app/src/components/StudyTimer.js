@@ -54,7 +54,8 @@ export default function StudyTimer({ onClose }) {
   if (!selectedTime) {
     return (
       <div className="study-timer">
-        <h3>Select Study Duration</h3>
+        <h2>Let's Study Today!</h2>
+        <p className="note">Select your study session duration</p>
         <div className="time-options">
           {timeOptions.map(option => (
             <button 
@@ -66,7 +67,7 @@ export default function StudyTimer({ onClose }) {
             </button>
           ))}
         </div>
-        <button className="btn ghost" onClick={onClose}>Cancel</button>
+        <button className="secondary-btn" onClick={onClose}>Cancel</button>
       </div>
     );
   }
@@ -74,19 +75,37 @@ export default function StudyTimer({ onClose }) {
   return (
     <div className="study-timer">
       <div className="timer-display">{formatTime(timeLeft)}</div>
-      <div className="timer-controls">
-        {!isRunning ? (
-          <button className="btn" onClick={() => setIsRunning(true)}>Start</button>
-        ) : (
-          <button className="btn" onClick={() => setIsRunning(false)}>Pause</button>
-        )}
-        <button className="btn ghost" onClick={() => {
-          setSelectedTime(null);
-          setTimeLeft(null);
-          setIsRunning(false);
-        }}>Reset</button>
-        <button className="btn ghost" onClick={onClose}>Close</button>
-      </div>
+      {isComplete ? (
+        <div className="timer-complete">
+          <h3>Great job! Study session complete! 🎉</h3>
+          <div className="timer-controls">
+            <button className="primary-btn" onClick={() => {
+              setSelectedTime(null);
+              setTimeLeft(null);
+              setIsRunning(false);
+              setIsComplete(false);
+            }}>Start New Session</button>
+            <button className="secondary-btn" onClick={onClose}>Close</button>
+          </div>
+        </div>
+      ) : (
+        <div className="timer-controls">
+          {!isRunning ? (
+            <button className="primary-btn" onClick={() => setIsRunning(true)}>
+              {timeLeft === selectedTime * 60 ? 'Start' : 'Resume'}
+            </button>
+          ) : (
+            <button className="primary-btn" onClick={() => setIsRunning(false)}>Pause</button>
+          )}
+          <button className="secondary-btn" onClick={() => {
+            setSelectedTime(null);
+            setTimeLeft(null);
+            setIsRunning(false);
+            setIsComplete(false);
+          }}>Reset</button>
+          <button className="secondary-btn" onClick={onClose}>Close</button>
+        </div>
+      )}
     </div>
   );
 }
