@@ -41,7 +41,6 @@ export default function Login({onSwitch, onLogin}){
     <div className="auth-root">
       <div className="auth-card">
         <div className="auth-brand">
-          <div className="brand-dot"/>
           <div>
             <div className="brand-title">StudyBuddy</div>
             <div className="brand-sub">Find study partners — fast</div>

@@ -13,10 +13,23 @@ function computeYear(credits){
 }
 
 function App(){
-  const [view,setView]=useState('login'); // 'login' | 'signup' | 'dashboard'
-  const [user,setUser]=useState(null);
-  // simple in-memory users store: { [username]: {password,name,major,credits,loginCount} }
-  const [users,setUsers]=useState({});
+  // Initialize view state, check if there's a logged in user in localStorage
+  const [view,setView]=useState(() => {
+    const savedUser = localStorage.getItem('currentUser');
+    return savedUser ? 'dashboard' : 'login';
+  });
+  
+  // Initialize user state from localStorage
+  const [user,setUser]=useState(() => {
+    const savedUser = localStorage.getItem('currentUser');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+  
+  // Initialize users from localStorage
+  const [users,setUsers]=useState(() => {
+    const savedUsers = localStorage.getItem('users');
+    return savedUsers ? JSON.parse(savedUsers) : {};
+  });
 
   // Debug function to log current users
   const logUsers = () => {
@@ -54,9 +67,13 @@ function App(){
         email: payload.email,
         username
       };
-      setUsers(prev => ({...prev, [username]: newUser}));
-      const year = computeYear(credits);
-      setUser({...newUser, username, year, loginCount: 1});
+      const updatedUsers = {...users, [username]: newUser};
+      setUsers(updatedUsers);
+      localStorage.setItem('users', JSON.stringify(updatedUsers));
+      
+      const userWithYear = {...newUser, username, year: computeYear(credits), loginCount: 1};
+      setUser(userWithYear);
+      localStorage.setItem('currentUser', JSON.stringify(userWithYear));
       setView('dashboard');
       return {success:true};
     }
@@ -77,9 +94,13 @@ function App(){
     
     const nextCount = (existing.loginCount || 0) + 1;
     const updated = {...existing, loginCount: nextCount};
-    setUsers(prev => ({...prev, [username]: updated}));
-    const year = computeYear(updated.credits);
-    setUser({...updated, username, year, loginCount: nextCount});
+    const updatedUsers = {...users, [username]: updated};
+    setUsers(updatedUsers);
+    localStorage.setItem('users', JSON.stringify(updatedUsers));
+    
+    const userWithYear = {...updated, username, year: computeYear(updated.credits), loginCount: nextCount};
+    setUser(userWithYear);
+    localStorage.setItem('currentUser', JSON.stringify(userWithYear));
     setView('dashboard');
     console.log('Login successful:', username);
     return {success:true};
@@ -87,13 +108,14 @@ function App(){
 
   function handleLogout(){
     setUser(null);
+    localStorage.removeItem('currentUser');
     setView('login');
   }
 
-  // Initialize with a test account and log users state
+  // Initialize with a test account if no users exist in localStorage
   React.useEffect(() => {
-    setUsers(prev => {
-      const updated = Object.keys(prev).length === 0 ? {
+    if (Object.keys(users).length === 0) {
+      const testUser = {
         'test': {
           username: 'test',
           password: 'Test123!',
@@ -103,11 +125,12 @@ function App(){
           loginCount: 0,
           email: 'test@njit.edu'
         }
-      } : prev;
-      console.log('Current users after initialization:', updated);
-      return updated;
-    });
-  }, []);
+      };
+      setUsers(testUser);
+      localStorage.setItem('users', JSON.stringify(testUser));
+      console.log('Initialized test account:', testUser);
+    }
+  }, [users]);
 
   // Log users state changes
   React.useEffect(() => {
